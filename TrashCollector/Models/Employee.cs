@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TrashCollector.Models
 {
-    public class Customer
+    public class Employee
     {
         [Key]
         public int Id { get; set; }
@@ -18,13 +18,10 @@ namespace TrashCollector.Models
 
         [Display(Name = "Last Name")]
         public string lastName { get; set; }
-        
-        [Display(Name = "Pick Up Day")]
-        public string weeklyPickUpDay { get; set; }
 
-        [ForeignKey("Address")]
-        public int AddressId { get; set; }
-        public Address Address { get; set; } 
+        [Display(Name = "Zip Code")]
+        public int zipCode { get; set; }
+
 
         [ForeignKey("IdentityUser")]
         public string IdentityUserId { get; set; }
