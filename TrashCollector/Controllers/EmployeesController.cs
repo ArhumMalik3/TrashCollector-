@@ -14,6 +14,7 @@ namespace TrashCollector.Controllers
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
+     
 
         public EmployeesController(ApplicationDbContext context)
         {
@@ -24,17 +25,16 @@ namespace TrashCollector.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customer = _context.Customers.Where(c => c.IdentityUserId ==
+            var employee = _context.Customers.Where(c => c.IdentityUserId ==
             userId).SingleOrDefault();
-            if (customer == null)
+            if (employee == null)
             {
                 RedirectToAction("Create");
             }
             //I need to do a query to find that user id is in the db if null the call create method if not then set that customer equal to this one
-
-            customer.IdentityUserId = userId;
-            _context.Add(customer);
-            _context.SaveChanges();
+           
+            //object reference was not set to an instance of the object
+            //
             var applicationDbContext = _context.Employees.Include(e => e.IdentityUser);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -61,6 +61,7 @@ namespace TrashCollector.Controllers
         // GET: Employees/Create
         public IActionResult Create()
         {
+            
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
@@ -72,8 +73,15 @@ namespace TrashCollector.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,firstName,lastName,zipCode,IdentityUserId")] Employee employee)
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            employee.IdentityUserId = userId;
+            _context.Add(employee);
+            _context.SaveChanges();
+
             if (ModelState.IsValid)
             {
+               
+
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

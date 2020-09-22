@@ -32,10 +32,8 @@ namespace TrashCollector.Controllers
             }
             //I need to do a query to find that user id is in the db if null the call create method if not then set that customer equal to this one
             
-            //object instance was not set to an instance of the object
-            customer.IdentityUserId = userId;
-            _context.Add(customer);
-            _context.SaveChanges();
+            //object reference was not set to an instance of the object
+            
             var applicationDbContext = _context.Customers.Include(c => c.Address).Include(c => c.IdentityUser);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -76,6 +74,10 @@ namespace TrashCollector.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,firstName,lastName,weeklyPickUpDay,AddressId,IdentityUserId")] Customer customer)
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            customer.IdentityUserId = userId;
+            _context.Add(customer);
+            _context.SaveChanges();
             if (ModelState.IsValid)
             {
                 _context.Add(customer);
