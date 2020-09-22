@@ -29,10 +29,11 @@ namespace TrashCollector.Controllers
             if (customer == null)
             {
                 RedirectToAction("Create");
+                //try to get address if address is null redirect to address controller - make sure to preserve customer so we can tie them together
             }
             //I need to do a query to find that user id is in the db if null the call create method if not then set that customer equal to this one
             
-            //object reference was not set to an instance of the object
+            
             
             var applicationDbContext = _context.Customers.Include(c => c.Address).Include(c => c.IdentityUser);
             return View(await applicationDbContext.ToListAsync());

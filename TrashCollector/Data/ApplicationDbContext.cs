@@ -21,6 +21,9 @@ namespace TrashCollector.Data
 
         public DbSet<Address> Addresses { get; set; }
 
+        public DbSet<PickUp> PickUps { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -43,6 +46,8 @@ namespace TrashCollector.Data
             }
             );
         }
+
+        public DbSet<TrashCollector.Models.PickUp> PickUp { get; set; }
     }
 
 }

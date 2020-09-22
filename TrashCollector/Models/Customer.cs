@@ -23,10 +23,6 @@ namespace TrashCollector.Models
         [Display(Name = "Pick Up Day")]
         public DayOfWeek weeklyPickUpDay { get; set; }
 
-
-        [Display(Name = "One Time Pick Ups")]
-        public DateTime extraPickUps { get; set; }
-
         [Display(Name = "Start Date")]
         public DateTime startDate { get; set; }
 
