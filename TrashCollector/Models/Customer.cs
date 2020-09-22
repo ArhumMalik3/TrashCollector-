@@ -10,6 +10,7 @@ namespace TrashCollector.Models
 {
     public class Customer
     {
+        
         [Key]
         public int Id { get; set; }
 
@@ -20,7 +21,22 @@ namespace TrashCollector.Models
         public string lastName { get; set; }
         
         [Display(Name = "Pick Up Day")]
-        public string weeklyPickUpDay { get; set; }
+        public DayOfWeek weeklyPickUpDay { get; set; }
+
+
+        [Display(Name = "One Time Pick Ups")]
+        public DateTime extraPickUps { get; set; }
+
+        [Display(Name = "Start Date")]
+        public DateTime startDate { get; set; }
+
+        [Display(Name = "End Date")]
+        public DateTime endDate { get; set; }
+
+        [Display(Name = "Amount Owed")]
+        public double amountOwed { get; set; }
+
+
 
         [ForeignKey("Address")]
         public int AddressId { get; set; }
@@ -29,5 +45,15 @@ namespace TrashCollector.Models
         [ForeignKey("IdentityUser")]
         public string IdentityUserId { get; set; }
         public IdentityUser IdentityUser { get; set; }
+
+
+        public enum DayOfWeek
+        {
+            Monday,
+            Tuesday,
+            Wednesday,
+            Thursday, 
+            Friday,
+        }
     }
 }
