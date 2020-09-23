@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -46,7 +47,8 @@ namespace TrashCollector.Controllers
         // GET: Addresses/Create
         public IActionResult Create()
         {
-            return View();
+            Address address = new Address();
+            return View(address);
         }
 
         // POST: Addresses/Create
@@ -54,13 +56,16 @@ namespace TrashCollector.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,streetName,houseNumber,zipCode,city,state")] Address address)
+        public IActionResult Create(Address address)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(address);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var customer = _context.Customers.Where(c => c.IdentityUserId == userId).First();
+                customer.AddressId = address.Id;
+                
+                return RedirectToAction("index", "CustomersController");
             }
             return View(address);
         }
@@ -86,7 +91,7 @@ namespace TrashCollector.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,streetName,houseNumber,zipCode,city,state")] Address address)
+        public IActionResult Edit(int id, Address address)
         {
             if (id != address.Id)
             {
@@ -98,7 +103,7 @@ namespace TrashCollector.Controllers
                 try
                 {
                     _context.Update(address);
-                    await _context.SaveChangesAsync();
+                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {

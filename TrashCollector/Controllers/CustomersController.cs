@@ -49,11 +49,12 @@ namespace TrashCollector.Controllers
                 return NotFound();
             }
             
+            if (_context.)
+            {
+                return RedirectToAction("Create", "AddressesController");
+            }
 
-            var customer = await _context.Customers
-                .Include(c => c.Address)
-                .Include(c => c.IdentityUser)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (customer == null)
             {
                 return NotFound();
@@ -65,10 +66,9 @@ namespace TrashCollector.Controllers
         // GET: Customers/Create
         public IActionResult Create()
         {
+            Customer customer = new Customer();
             
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id");
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            return View(customer);
         }
 
         // POST: Customers/Create
@@ -76,40 +76,39 @@ namespace TrashCollector.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,firstName,lastName,weeklyPickUpDay,startDate, endDate, amountOwed, AddressId,IdentityUserId")] Customer customer)
+        public IActionResult Create(Customer customer)
         {
-
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            customer.IdentityUserId = userId;
-            _context.Add(customer);
-            _context.SaveChanges();
 
             if (ModelState.IsValid)
             {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                customer.IdentityUserId = userId;
                 _context.Add(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.SaveChanges();
+                return RedirectToAction("Create", "AddressesController");
+                
             }
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", customer.AddressId);
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
-            return View("Index");
+            //ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", customer.AddressId);
+            
+            return RedirectToAction("Details");
         }
 
         // GET: Customers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
+            
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
             if (id == null)
             {
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
+            
             if (customer == null)
             {
                 return NotFound();
             }
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", customer.AddressId);
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
+           
             return View(customer);
         }
 
@@ -118,7 +117,7 @@ namespace TrashCollector.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,firstName,lastName,weeklyPickUpDay,AddressId,IdentityUserId")] Customer customer)
+        public IActionResult Edit(int id, Customer customer)
         {
             if (id != customer.Id)
             {
@@ -130,7 +129,7 @@ namespace TrashCollector.Controllers
                 try
                 {
                     _context.Update(customer);
-                    await _context.SaveChangesAsync();
+                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {

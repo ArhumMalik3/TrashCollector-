@@ -22,7 +22,7 @@ namespace TrashCollector.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employee = _context.Customers.Where(c => c.IdentityUserId ==
@@ -35,7 +35,7 @@ namespace TrashCollector.Controllers
 
             var today = DateTime.Today.DayOfWeek.ToString();
             var applicationDbContext = _context.Employees.Include(e => e.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+            return View(applicationDbContext);
         }
 
         // GET: Employees/Details/5
