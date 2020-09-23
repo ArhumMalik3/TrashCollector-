@@ -30,7 +30,16 @@ namespace TrashCollector.ActionFilters
                     context.Result = new RedirectToActionResult("Index",
                     "Employees", null);
                 }
+                
             }
+            //if (controller.Equals("Customer"))
+            //{
+            //    if (_claimsPrincipal.IsInRole("Customer"))
+            //    {
+            //        context.Result = new RedirectToActionResult("Create",
+            //        "Addresses", null);
+            //    }
+            //}
         }
         public void OnActionExecuted(ActionExecutedContext context)
         {

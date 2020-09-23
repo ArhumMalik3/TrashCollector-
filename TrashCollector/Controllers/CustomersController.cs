@@ -21,7 +21,7 @@ namespace TrashCollector.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var customer = _context.Customers.Where(c => c.IdentityUserId ==
@@ -37,23 +37,14 @@ namespace TrashCollector.Controllers
             
             
             
-            var applicationDbContext = _context.Customers.Include(c => c.Address).Include(c => c.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+            //var applicationDbContext = _context.Customers.Include(c => c.Address).Include(c => c.IdentityUser);
+            return View("Details", customer);
         }
 
         // GET: Customers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(Customer customer)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
             
-            if (_context.)
-            {
-                return RedirectToAction("Create", "AddressesController");
-            }
-
             
             if (customer == null)
             {
@@ -85,7 +76,7 @@ namespace TrashCollector.Controllers
                 customer.IdentityUserId = userId;
                 _context.Add(customer);
                 _context.SaveChanges();
-                return RedirectToAction("Create", "AddressesController");
+                return RedirectToAction("Create", "Addresses");
                 
             }
             //ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", customer.AddressId);

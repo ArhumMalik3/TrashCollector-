@@ -65,7 +65,7 @@ namespace TrashCollector.Controllers
                 var customer = _context.Customers.Where(c => c.IdentityUserId == userId).First();
                 customer.AddressId = address.Id;
                 
-                return RedirectToAction("index", "CustomersController");
+                return RedirectToAction("Index", "Customers");
             }
             return View(address);
         }
