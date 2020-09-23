@@ -60,11 +60,17 @@ namespace TrashCollector.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(address);
+                //_context.Add(address);
+               
+                
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var customer = _context.Customers.Where(c => c.IdentityUserId == userId).First();
-                customer.AddressId = address.Id;
-                
+                customer.Address = address;
+                _context.Customers.Update(customer);
+                _context.SaveChanges();
+
+
+
                 return RedirectToAction("Index", "Customers");
             }
             return View(address);
