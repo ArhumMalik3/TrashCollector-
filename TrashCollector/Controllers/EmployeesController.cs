@@ -32,9 +32,8 @@ namespace TrashCollector.Controllers
                 RedirectToAction("Create");
             }
             //I need to do a query to find that user id is in the db if null the call create method if not then set that customer equal to this one
-           
-            //object reference was not set to an instance of the object
-            //
+
+            var today = DateTime.Today.DayOfWeek.ToString();
             var applicationDbContext = _context.Employees.Include(e => e.IdentityUser);
             return View(await applicationDbContext.ToListAsync());
         }

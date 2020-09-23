@@ -26,9 +26,16 @@
             </div>
             <div class="form-group">
                 <label asp-for="weeklyPickUpDay" class="control-label"></label>
-                @Html.DropDownListFor(m => m.weeklyPickUpDay,
-               new SelectList(Enum.GetValues(typeof(DayOfWeek)))
-               )
+                <select class="form-control" id=" weeklyPickUpDay " name=" weeklyPickUpDay ">
+                    <option>Select DayOfWeek</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                    <option>Sunday</option>
+                </select>
                 <span asp-validation-for="weeklyPickUpDay" class="text-danger"></span>
             </div>
             
