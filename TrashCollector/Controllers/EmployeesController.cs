@@ -60,7 +60,26 @@ namespace TrashCollector.Controllers
 
         public IActionResult Filter()
         {
-            return View();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var employee = _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
+
+
+            DayOfWeek[] days =
+            {
+                DayOfWeek.Monday,
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday,
+                DayOfWeek.Thursday,
+                DayOfWeek.Friday,
+                DayOfWeek.Saturday,
+                DayOfWeek.Sunday,
+            };
+            
+            //get a drop down list of days of the week and when you click /query that it just shows the customers
+            
+            SelectList daysToSee = new SelectList(days);
+            return View(daysToSee);
+          
         }
         public IActionResult ConfirmPickUp(Customer customer)
         {
@@ -108,7 +127,7 @@ namespace TrashCollector.Controllers
         public IActionResult Create(Employee employee)
         {
             
-            if (ModelState.IsValid)
+            try
             {
 
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -118,8 +137,12 @@ namespace TrashCollector.Controllers
                 return RedirectToAction("Index");
                
             }
+
+            catch
+            {
+                return View(employee);
+            }
             
-            return View(employee);
         }
 
         // GET: Employees/Edit/5
