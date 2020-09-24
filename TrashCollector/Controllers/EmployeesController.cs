@@ -56,7 +56,18 @@ namespace TrashCollector.Controllers
             
             return View(customerPickUps);
         }
+        public IActionResult ConfirmPickUp(Customer customer)
+        {
+            //put this as a button on the drop down menu next to the customer in the filters
+            
+            var pickUp = _context.PickUps.Where(p => p.Customer == customer).First();
+            
+            pickUp.pickedUp = true;
 
+            _context.PickUps.Update(pickUp);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
         // GET: Employees/Details/5
         public IActionResult Details(int? id)
         {
