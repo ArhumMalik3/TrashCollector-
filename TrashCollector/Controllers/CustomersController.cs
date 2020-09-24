@@ -119,7 +119,7 @@ namespace TrashCollector.Controllers
         {
             
 
-            if (ModelState.IsValid)
+            try
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var customerFromDb = _context.Customers.Where(c => c.IdentityUserId == userId).SingleOrDefault();
@@ -137,8 +137,11 @@ namespace TrashCollector.Controllers
 
 
             }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
             
-            return RedirectToAction("Index");
         }
 
         // GET: Customers/Delete/5

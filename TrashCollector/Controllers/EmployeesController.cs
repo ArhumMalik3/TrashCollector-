@@ -13,6 +13,7 @@ namespace TrashCollector.Controllers
 {
     public class EmployeesController : Controller
     {
+        public double pickUpFee = 49;
         private readonly ApplicationDbContext _context;
      
 
@@ -56,6 +57,11 @@ namespace TrashCollector.Controllers
             
             return View(customerPickUps);
         }
+
+        public IActionResult Filter()
+        {
+            return View();
+        }
         public IActionResult ConfirmPickUp(Customer customer)
         {
             //put this as a button on the drop down menu next to the customer in the filters
@@ -67,6 +73,12 @@ namespace TrashCollector.Controllers
             _context.PickUps.Update(pickUp);
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        
+        public IActionResult ViewMap(int? id)
+        {
+            return View();
         }
         // GET: Employees/Details/5
         public IActionResult Details(int? id)
@@ -113,14 +125,9 @@ namespace TrashCollector.Controllers
         // GET: Employees/Edit/5
         public IActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            var pickUp = _context.PickUps.Where(p => p.CustomerId == id).Single();
+            return View(pickUp);
             
-           
-            return View();
         }
 
         // POST: Employees/Edit/5
@@ -128,35 +135,22 @@ namespace TrashCollector.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id,  Employee employee)
+        public IActionResult Edit(PickUp pickUp)
         {
-            if (id != employee.Id)
+            try
             {
-                return NotFound();
+                if (pickUp.pickedUp == true)
+                {
+                    pickUp.Customer.amountOwed+= pickUpFee;
+                }
+                _context.Update(pickUp);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
-
-            if (ModelState.IsValid)
+            catch
             {
-                try
-                {
-                    _context.Update(employee);
-                    
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View("Index");
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
-            return View(employee);
         }
 
         // GET: Employees/Delete/5
