@@ -65,21 +65,16 @@ namespace TrashCollector.Controllers
                 return NotFound();
             }
 
-           
-            if (employee == null)
-            {
-                return NotFound();
-            }
 
-            return View(employee);
+            return View();
         }
 
         // GET: Employees/Create
         public IActionResult Create()
         {
-            
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+
+            Employee employee = new Employee();
+            return View(employee);
         }
 
         // POST: Employees/Create
@@ -89,20 +84,18 @@ namespace TrashCollector.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Employee employee)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            employee.IdentityUserId = userId;
-            _context.Add(employee);
-            _context.SaveChanges();
-
+            
             if (ModelState.IsValid)
             {
-               
 
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                employee.IdentityUserId = userId;
                 _context.Add(employee);
-                
-                return RedirectToAction(nameof(Index));
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+               
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
+            
             return View(employee);
         }
 
@@ -115,12 +108,8 @@ namespace TrashCollector.Controllers
             }
 
             
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
-            return View(employee);
+           
+            return View();
         }
 
         // POST: Employees/Edit/5
