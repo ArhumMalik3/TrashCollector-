@@ -21,11 +21,25 @@ namespace TrashCollector.Controllers
             _context = context;
         }
 
+        public List<Address> GetAddresses()
+        {
+            List<Address> allAddresses = _context.Addresses.ToList();
+
+            return allAddresses;
+        }
+
+        public List<Customer> GetCustomers()
+        {
+            List<Customer> allCustomers = _context.Customers.ToList();
+
+            return allCustomers;
+        }
+
         // GET: Employees
         public IActionResult Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var employee = _context.Customers.Where(c => c.IdentityUserId ==
+            var employee = _context.Employees.Where(e => e.IdentityUserId ==
             userId).SingleOrDefault();
             if (employee == null)
             {
@@ -33,7 +47,9 @@ namespace TrashCollector.Controllers
             }
             //I need to do a query to find that user id is in the db if null the call create method if not then set that customer equal to this one
 
+            
             var today = DateTime.Today.DayOfWeek.ToString();
+            var zipCodesInArea = _context.Employees.Where(e => e.zipCode == addressesInDb.) 
             var applicationDbContext = _context.Employees.Include(e => e.IdentityUser);
             return View(applicationDbContext);
         }
