@@ -48,9 +48,7 @@ namespace TrashCollector.Controllers
             }
             //I need to do a query to find that user id is in the db if null the call create method if not then set that customer equal to this one
             var today = DateTime.Today.DayOfWeek.ToString();
-            //List<Customer> customerPickUps = null;
-            //List<Customer> customersInDb = GetCustomers();
-            //var zipCodesInArea = customersInDb.SkipWhile(c => c.Address.zipCode != employee.zipCode).ToList();
+            
             
             
             var zipCodesInArea = _context.Customers.Where(c => c.Address.zipCode == employee.zipCode).ToList();

@@ -20,9 +20,23 @@
                 @Html.DisplayNameFor(model => model.lastName)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.weeklyPickUpDay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.startDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.endDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.amountOwed)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Address)
             </th>
-            
+            <th>
+                @Html.DisplayNameFor(model => model.IdentityUser)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -36,9 +50,23 @@
                 @Html.DisplayFor(modelItem => item.lastName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Address)
+                @Html.DisplayFor(modelItem => item.weeklyPickUpDay)
             </td>
-            
+            <td>
+                @Html.DisplayFor(modelItem => item.startDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.endDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.amountOwed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdentityUser.Id)
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
