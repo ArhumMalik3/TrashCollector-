@@ -19,7 +19,10 @@ namespace TrashCollector.Controllers
         {
             _context = context;
         }
-
+        //public bool setPickUp()
+        //{
+        //    return false;
+        //}
         // GET: Customers
         public IActionResult Index()
         {
@@ -35,6 +38,10 @@ namespace TrashCollector.Controllers
             }
             //I need to do a query to find that user id is in the db if null the call create method if not then set that customer equal to this one
             
+            //else if ()
+            //{
+            //    return RedirectToAction("Create", "PickUps");
+            //}
             
             
             //var applicationDbContext = _context.Customers.Include(c => c.Address).Include(c => c.IdentityUser);

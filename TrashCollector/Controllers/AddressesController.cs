@@ -70,8 +70,8 @@ namespace TrashCollector.Controllers
                 _context.SaveChanges();
 
 
-
-                return RedirectToAction("Index", "Customers");
+                return RedirectToAction("Create", "PickUps");
+                
             }
             return View(address);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -48,8 +49,8 @@ namespace TrashCollector.Controllers
         // GET: PickUps/Create
         public IActionResult Create()
         {
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id");
-            return View();
+            PickUp pickUp = new PickUp();
+            return View(pickUp);
         }
 
         // POST: PickUps/Create
@@ -57,16 +58,22 @@ namespace TrashCollector.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CustomerId,pickedUp,timeOfPickup")] PickUp pickUp)
+        public IActionResult Create(PickUp pickUp)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(pickUp);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //_context.Add(pickUp);
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var customer = _context.Customers.Where(c => c.IdentityUserId == userId).First();
+                pickUp.Customer = customer;
+                pickUp.pickedUp = false;
+
+                _context.PickUps.Update(pickUp);
+                _context.SaveChanges();
+
+                return RedirectToAction("Index", "Customers");
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", pickUp.CustomerId);
-            return View(pickUp);
+            return RedirectToAction("Index", "Customers");
         }
 
         // GET: PickUps/Edit/5

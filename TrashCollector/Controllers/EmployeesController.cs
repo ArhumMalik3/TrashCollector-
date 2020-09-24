@@ -58,16 +58,14 @@ namespace TrashCollector.Controllers
         }
 
         // GET: Employees/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .Include(e => e.IdentityUser)
-                .FirstOrDefaultAsync(m => m.Id == id);
+           
             if (employee == null)
             {
                 return NotFound();
@@ -89,7 +87,7 @@ namespace TrashCollector.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,firstName,lastName,zipCode,IdentityUserId")] Employee employee)
+        public IActionResult Create(Employee employee)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             employee.IdentityUserId = userId;
@@ -101,7 +99,7 @@ namespace TrashCollector.Controllers
                
 
                 _context.Add(employee);
-                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
@@ -109,14 +107,14 @@ namespace TrashCollector.Controllers
         }
 
         // GET: Employees/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var employee = await _context.Employees.FindAsync(id);
+            
             if (employee == null)
             {
                 return NotFound();
@@ -130,7 +128,7 @@ namespace TrashCollector.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,firstName,lastName,zipCode,IdentityUserId")] Employee employee)
+        public IActionResult Edit(int id,  Employee employee)
         {
             if (id != employee.Id)
             {
@@ -142,7 +140,7 @@ namespace TrashCollector.Controllers
                 try
                 {
                     _context.Update(employee);
-                    await _context.SaveChangesAsync();
+                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {
