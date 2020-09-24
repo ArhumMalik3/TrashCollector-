@@ -49,7 +49,7 @@ namespace TrashCollector.Controllers
 
             
             var today = DateTime.Today.DayOfWeek.ToString();
-            var zipCodesInArea = _context.Employees.Where(e => e.zipCode == addressesInDb.) 
+            var zipCodesInArea = _context.Addresses.Where(a => a.zipCode == employee.zipCode); 
             var applicationDbContext = _context.Employees.Include(e => e.IdentityUser);
             return View(applicationDbContext);
         }
