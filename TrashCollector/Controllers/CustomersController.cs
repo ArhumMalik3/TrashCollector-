@@ -108,36 +108,30 @@ namespace TrashCollector.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Customer customer)
+        public IActionResult Edit(Customer customer)
         {
-            if (id != customer.Id)
-            {
-                return NotFound();
-            }
+            
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(customer);
-                    
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomerExists(customer.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var customerFromDb = _context.Customers.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+
+                customerFromDb.firstName = customer.firstName;
+                customerFromDb.lastName = customer.lastName;
+                customerFromDb.weeklyPickUpDay = customer.weeklyPickUpDay;
+                customerFromDb.startDate = customer.startDate;
+                customerFromDb.endDate = customer.endDate;
+
+                _context.Update(customerFromDb);
+                _context.SaveChanges();
+                return RedirectToAction("Details", customerFromDb);
+
+
+
             }
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", customer.AddressId);
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
-            return View(customer);
+            
+            return RedirectToAction("Index");
         }
 
         // GET: Customers/Delete/5
