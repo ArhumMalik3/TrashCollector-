@@ -44,17 +44,17 @@ namespace TrashCollector.Controllers
             userId).SingleOrDefault();
             if (employee == null)
             {
-                RedirectToAction("Create");
+                return RedirectToAction("Create");
             }
             //I need to do a query to find that user id is in the db if null the call create method if not then set that customer equal to this one
             var today = DateTime.Today.DayOfWeek.ToString();
-            List<Customer> customerPickUps = null;
-            List<Customer> customersInDb = GetCustomers();
-            var zipCodesInArea = customersInDb.SkipWhile(c => c.Address.zipCode != employee.zipCode).ToList();
+            //List<Customer> customerPickUps = null;
+            //List<Customer> customersInDb = GetCustomers();
+            //var zipCodesInArea = customersInDb.SkipWhile(c => c.Address.zipCode != employee.zipCode).ToList();
             
-            customerPickUps = zipCodesInArea.Where(c => c.weeklyPickUpDay.ToString() == today).ToList();
-             
             
+            var zipCodesInArea = _context.Customers.Where(c => c.Address.zipCode == employee.zipCode).ToList();
+            var customerPickUps = zipCodesInArea.Where(c => c.weeklyPickUpDay.ToString() == today).ToList();
             return View(customerPickUps);
         }
 
